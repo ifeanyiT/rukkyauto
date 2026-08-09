@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "url": "https://YOUR-SCRAPER.onrender.com/scrape",
+        "url": "https://rukky-ugc-scraper.onrender.com/scrape",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendQuery": true,
