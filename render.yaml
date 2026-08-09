@@ -1,5 +1,5 @@
-# Render Blueprint. Push this repo to GitHub, then in Render:
-# New + -> Blueprint -> pick the repo. Render reads this file.
+# Render Blueprint (must live at the REPO ROOT so Render can find it).
+# New + -> Blueprint -> pick the rukkyauto repo -> branch main. Render reads this file.
 services:
   - type: web
     name: rukky-ugc-scraper
