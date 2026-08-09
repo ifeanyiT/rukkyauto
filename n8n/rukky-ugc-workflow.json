@@ -32,7 +32,10 @@
       "name": "Get Trends (Scraper)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [240, 300]
+      "position": [240, 300],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
     },
     {
       "parameters": { "fieldToSplitOut": "trends", "options": {} },
