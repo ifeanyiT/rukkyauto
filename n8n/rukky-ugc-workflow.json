@@ -78,7 +78,7 @@
       "parameters": {
         "resource": "databasePage",
         "operation": "create",
-        "databaseId": { "__rl": true, "value": "YOUR_NOTION_DATABASE_ID", "mode": "id" },
+        "databaseId": { "__rl": true, "value": "6a0a1a2307c0445b9cb954ead0b25b49", "mode": "id" },
         "propertiesUi": {
           "propertyValues": [
             { "key": "Topic|title", "title": "={{ $('Loop In Batches Of 5').item.json.topic }}" },
