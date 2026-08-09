@@ -1,0 +1,118 @@
+{
+  "name": "Rukky UGC Content Strategy Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "weeks", "triggerAtDay": [1], "triggerAtHour": 8 }
+          ]
+        }
+      },
+      "id": "schedule",
+      "name": "Weekly Trigger (Mon 8am)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://YOUR-SCRAPER.onrender.com/scrape",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "source", "value": "demo" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.SCRAPER_API_KEY }}" }
+          ]
+        },
+        "options": { "timeout": 120000 }
+      },
+      "id": "http",
+      "name": "Get Trends (Scraper)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": { "fieldToSplitOut": "trends", "options": {} },
+      "id": "split",
+      "name": "Split Trends Into Items",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": { "batchSize": 5, "options": {} },
+      "id": "loop",
+      "name": "Loop In Batches Of 5",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "modelId": { "__rl": true, "value": "gpt-4o-mini", "mode": "list" },
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert UGC content strategist. For the given trending topic, respond ONLY with a JSON object of the form {\"hooks\": [\"hook1\", \"hook2\", \"hook3\"], \"strategy\": \"a 2-3 sentence campaign strategy\"}. Hooks must be short, scroll-stopping, first-person or POV style, ready to film."
+            },
+            {
+              "role": "user",
+              "content": "=Trending topic: {{ $json.topic }}\nExisting hook (if any): {{ $json.hook }}\nEngagement signal: {{ $json.engagement }}\nSource: {{ $json.source }}\n\nGenerate 3 high-converting UGC video hooks and a brief campaign strategy."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": { "temperature": 0.8 }
+      },
+      "id": "openai",
+      "name": "Generate Hooks (OpenAI)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": { "__rl": true, "value": "YOUR_NOTION_DATABASE_ID", "mode": "id" },
+        "propertiesUi": {
+          "propertyValues": [
+            { "key": "Topic|title", "title": "={{ $('Loop In Batches Of 5').item.json.topic }}" },
+            { "key": "Hooks|rich_text", "textContent": "={{ ($json.message.content.hooks || []).join('\\n') }}" },
+            { "key": "Strategy|rich_text", "textContent": "={{ $json.message.content.strategy }}" },
+            { "key": "Source Link|url", "urlValue": "={{ $('Loop In Batches Of 5').item.json.source_link }}" },
+            { "key": "Performance Status|select", "selectValue": "New" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notion",
+      "name": "Save To Notion Dashboard",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [1200, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Trigger (Mon 8am)": { "main": [[{ "node": "Get Trends (Scraper)", "type": "main", "index": 0 }]] },
+    "Get Trends (Scraper)": { "main": [[{ "node": "Split Trends Into Items", "type": "main", "index": 0 }]] },
+    "Split Trends Into Items": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] },
+    "Loop In Batches Of 5": {
+      "main": [
+        [],
+        [{ "node": "Generate Hooks (OpenAI)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generate Hooks (OpenAI)": { "main": [[{ "node": "Save To Notion Dashboard", "type": "main", "index": 0 }]] },
+    "Save To Notion Dashboard": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" }
+}

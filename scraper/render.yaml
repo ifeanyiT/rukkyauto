@@ -1,0 +1,15 @@
+# Render Blueprint. Push this repo to GitHub, then in Render:
+# New + -> Blueprint -> pick the repo. Render reads this file.
+services:
+  - type: web
+    name: rukky-ugc-scraper
+    runtime: docker
+    dockerfilePath: ./scraper/Dockerfile
+    dockerContext: ./scraper
+    plan: free            # sleeps after 15 min idle; fine for a weekly job
+    healthCheckPath: /health
+    envVars:
+      - key: SCRAPER_API_KEY
+        sync: false        # set the real value in the Render dashboard
+      - key: TREND_THRESHOLD
+        value: "50"
