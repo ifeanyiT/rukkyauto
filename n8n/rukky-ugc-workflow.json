@@ -18,16 +18,12 @@
     {
       "parameters": {
         "url": "https://YOUR-SCRAPER.onrender.com/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             { "name": "source", "value": "demo" }
-          ]
-        },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "x-api-key", "value": "={{ $env.SCRAPER_API_KEY }}" }
           ]
         },
         "options": { "timeout": 120000 }
