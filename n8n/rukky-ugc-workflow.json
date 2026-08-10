@@ -103,20 +103,24 @@
     },
     {
       "parameters": {
-        "operation": "append",
-        "documentId": { "__rl": true, "value": "1VqPxxloRO43Bf1rmrb_Lvp4GGpdQ-C1XbIYYe77HutU", "mode": "id" },
-        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "matchingColumns": [],
-          "value": {}
+        "resource": "databasePage",
+        "operation": "create",
+        "databaseId": { "__rl": true, "value": "b0d70df4c8604d4c8f39294a6bd07607", "mode": "id" },
+        "propertiesUi": {
+          "propertyValues": [
+            { "key": "Topic|title", "title": "={{ $json.Topic }}" },
+            { "key": "Hooks|rich_text", "textContent": "={{ $json.Hooks }}" },
+            { "key": "Strategy|rich_text", "textContent": "={{ $json.Strategy }}" },
+            { "key": "Source Link|url", "urlValue": "={{ $json['Source Link'] }}" },
+            { "key": "Performance Status|select", "selectValue": "New" }
+          ]
         },
         "options": {}
       },
-      "id": "sheets",
-      "name": "Save To Google Sheet",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "notion",
+      "name": "Save To Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
       "position": [1400, 300]
     }
   ],
@@ -131,8 +135,8 @@
       ]
     },
     "Generate Hooks (OpenAI)": { "main": [[{ "node": "Format Row", "type": "main", "index": 0 }]] },
-    "Format Row": { "main": [[{ "node": "Save To Google Sheet", "type": "main", "index": 0 }]] },
-    "Save To Google Sheet": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] }
+    "Format Row": { "main": [[{ "node": "Save To Notion", "type": "main", "index": 0 }]] },
+    "Save To Notion": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" }
 }
