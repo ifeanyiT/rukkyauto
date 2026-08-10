@@ -105,7 +105,7 @@
       "parameters": {
         "operation": "append",
         "documentId": { "__rl": true, "value": "1VqPxxloRO43Bf1rmrb_Lvp4GGpdQ-C1XbIYYe77HutU", "mode": "id" },
-        "sheetName": { "__rl": true, "value": "Rukky UGC Trends", "mode": "name" },
+        "sheetName": { "__rl": true, "value": "Sheet1", "mode": "name" },
         "columns": {
           "mappingMode": "autoMapInputData",
           "matchingColumns": [],
