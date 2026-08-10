@@ -79,25 +79,41 @@
     },
     {
       "parameters": {
-        "resource": "databasePage",
-        "operation": "create",
-        "databaseId": { "__rl": true, "value": "6a0a1a2307c0445b9cb954ead0b25b49", "mode": "id" },
-        "propertiesUi": {
-          "propertyValues": [
-            { "key": "Topic|title", "title": "={{ $('Loop In Batches Of 5').item.json.topic }}" },
-            { "key": "Hooks|rich_text", "textContent": "={{ ($json.message.content.hooks || []).join('\\n') }}" },
-            { "key": "Strategy|rich_text", "textContent": "={{ $json.message.content.strategy }}" },
-            { "key": "Source Link|url", "urlValue": "={{ $('Loop In Batches Of 5').item.json.source_link }}" },
-            { "key": "Performance Status|select", "selectValue": "New" }
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            { "id": "f1", "name": "Topic", "type": "string", "value": "={{ $('Loop In Batches Of 5').item.json.topic }}" },
+            { "id": "f2", "name": "Hooks", "type": "string", "value": "={{ ($json.message.content.hooks || []).join('\\n') }}" },
+            { "id": "f3", "name": "Strategy", "type": "string", "value": "={{ $json.message.content.strategy }}" },
+            { "id": "f4", "name": "Source Link", "type": "string", "value": "={{ $('Loop In Batches Of 5').item.json.source_link }}" },
+            { "id": "f5", "name": "Performance Status", "type": "string", "value": "New" }
           ]
         },
         "options": {}
       },
-      "id": "notion",
-      "name": "Save To Notion Dashboard",
-      "type": "n8n-nodes-base.notion",
-      "typeVersion": 2.2,
-      "position": [1200, 300]
+      "id": "format",
+      "name": "Format Row",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1180, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "1VqPxxloRO43Bf1rmrb_Lvp4GGpdQ-C1XbIYYe77HutU", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "0", "mode": "id" },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "sheets",
+      "name": "Save To Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1400, 300]
     }
   ],
   "connections": {
@@ -110,8 +126,9 @@
         [{ "node": "Generate Hooks (OpenAI)", "type": "main", "index": 0 }]
       ]
     },
-    "Generate Hooks (OpenAI)": { "main": [[{ "node": "Save To Notion Dashboard", "type": "main", "index": 0 }]] },
-    "Save To Notion Dashboard": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] }
+    "Generate Hooks (OpenAI)": { "main": [[{ "node": "Format Row", "type": "main", "index": 0 }]] },
+    "Format Row": { "main": [[{ "node": "Save To Google Sheet", "type": "main", "index": 0 }]] },
+    "Save To Google Sheet": { "main": [[{ "node": "Loop In Batches Of 5", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" }
 }
