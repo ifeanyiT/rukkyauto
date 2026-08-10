@@ -18,12 +18,16 @@
     {
       "parameters": {
         "url": "https://rukky-ugc-scraper.onrender.com/scrape",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             { "name": "source", "value": "demo" }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "5Ol733lVMKSc5m8ael9GZZbyDY3sdjsyQDrtiL39tfo" }
           ]
         },
         "options": { "timeout": 120000 }
